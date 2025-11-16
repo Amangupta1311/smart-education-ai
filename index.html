@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Smart Education AI Platform</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <header>
+        <div class="container">
+            <h1>🎓 Smart Education AI</h1>
+            <div class="header-controls">
+                <nav>
+                    <a href="#home" class="nav-link active">Home</a>
+                    <a href="#quiz" class="nav-link">AI Quiz</a>
+                    <a href="#summarizer" class="nav-link">Summarizer</a>
+                    <a href="#flashcards" class="nav-link">Flashcards</a>
+                    <a href="#tutor" class="nav-link">AI Tutor</a>
+                    <a href="#planner" class="nav-link">Planner</a>
+                    <a href="#vocabulary" class="nav-link">Vocabulary</a>
+                    <a href="#progress" class="nav-link">Progress</a>
+                </nav>
+                <button class="theme-toggle" id="theme-toggle" aria-label="Toggle theme">🌙</button>
+            </div>
+        </div>
+    </header>
+
+    <main class="container">
+        <!-- Home Section -->
+        <section id="home" class="section active">
+            <div class="hero">
+                <h2>Welcome to Smart Education AI</h2>
+                <p>Your personalized AI-powered learning companion</p>
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="icon">🤖</div>
+                        <h3>AI Quiz Generator</h3>
+                        <p>Generate personalized quizzes on any topic</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">📝</div>
+                        <h3>Smart Summarizer</h3>
+                        <p>Get concise summaries of study materials</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">🎴</div>
+                        <h3>Flashcard Generator</h3>
+                        <p>Convert notes into interactive flashcards</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">💬</div>
+                        <h3>AI Tutor Chat</h3>
+                        <p>Ask questions and get instant explanations</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">📅</div>
+                        <h3>Study Planner</h3>
+                        <p>Create personalized study schedules</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">📚</div>
+                        <h3>Vocabulary Builder</h3>
+                        <p>Extract and learn key terms</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">📊</div>
+                        <h3>Progress Tracking</h3>
+                        <p>Monitor your learning journey</p>
+                    </div>
+                    <div class="feature-card">
+                        <div class="icon">💡</div>
+                        <h3>Personalized Learning</h3>
+                        <p>AI-powered recommendations</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- AI Quiz Section -->
+        <section id="quiz" class="section">
+            <h2>AI Quiz Generator</h2>
+            <div class="quiz-generator">
+                <div class="input-group">
+                    <label for="topic">Enter Topic:</label>
+                    <input type="text" id="topic" placeholder="e.g., Python Programming, World History">
+                </div>
+                <div class="input-group">
+                    <label for="difficulty">Difficulty:</label>
+                    <select id="difficulty">
+                        <option value="easy">Easy</option>
+                        <option value="medium">Medium</option>
+                        <option value="hard">Hard</option>
+                    </select>
+                </div>
+                <div class="input-group">
+                    <label for="num-questions">Number of Questions:</label>
+                    <input type="number" id="num-questions" value="5" min="1" max="10">
+                </div>
+                <button id="generate-quiz" class="btn btn-primary">Generate Quiz</button>
+            </div>
+
+            <div id="quiz-container" class="quiz-container hidden">
+                <div id="quiz-questions"></div>
+                <button id="submit-quiz" class="btn btn-success">Submit Quiz</button>
+                <div id="quiz-results" class="results hidden"></div>
+            </div>
+        </section>
+
+        <!-- Summarizer Section -->
+        <section id="summarizer" class="section">
+            <h2>AI Study Material Summarizer</h2>
+            <div class="summarizer">
+                <div class="input-group">
+                    <label for="text-input">Paste your study material:</label>
+                    <textarea id="text-input" rows="10" placeholder="Paste your text here..."></textarea>
+                </div>
+                <button id="summarize-btn" class="btn btn-primary">Summarize</button>
+                <div id="summary-result" class="result-box hidden">
+                    <h3>Summary:</h3>
+                    <div id="summary-content"></div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Flashcards Section -->
+        <section id="flashcards" class="section">
+            <h2>Flashcard Generator</h2>
+            <div class="flashcard-generator">
+                <div class="input-group">
+                    <label for="flashcard-topic">Topic or Subject:</label>
+                    <input type="text" id="flashcard-topic" placeholder="e.g., Biology, Chemistry">
+                </div>
+                <div class="input-group">
+                    <label for="flashcard-content">Study Material (optional):</label>
+                    <textarea id="flashcard-content" rows="6" placeholder="Paste your notes or leave empty to generate from topic..."></textarea>
+                </div>
+                <div class="input-group">
+                    <label for="num-flashcards">Number of Flashcards:</label>
+                    <input type="number" id="num-flashcards" value="5" min="1" max="15">
+                </div>
+                <button id="generate-flashcards" class="btn btn-primary">Generate Flashcards</button>
+            </div>
+
+            <div id="flashcard-display" class="flashcard-display hidden">
+                <div class="flashcard-controls">
+                    <button id="prev-card" class="btn">← Previous</button>
+                    <span id="card-counter">1 / 5</span>
+                    <button id="next-card" class="btn">Next →</button>
+                </div>
+                <div class="flashcard-container">
+                    <div class="flashcard" id="current-flashcard">
+                        <div class="flashcard-front">
+                            <p id="flashcard-question">Click to flip</p>
+                        </div>
+                        <div class="flashcard-back hidden">
+                            <p id="flashcard-answer">Answer appears here</p>
+                        </div>
+                    </div>
+                </div>
+                <button id="flip-card" class="btn btn-primary">Flip Card</button>
+            </div>
+        </section>
+
+        <!-- AI Tutor Section -->
+        <section id="tutor" class="section">
+            <h2>AI Tutor Chat</h2>
+            <div class="tutor-container">
+                <div id="chat-history" class="chat-history">
+                    <div class="chat-message bot-message">
+                        <strong>AI Tutor:</strong> Hello! I'm your AI tutor. Ask me anything about your studies!
+                    </div>
+                </div>
+                <div class="chat-input-container">
+                    <input type="text" id="tutor-input" placeholder="Ask a question..." class="chat-input">
+                    <button id="send-question" class="btn btn-primary">Send</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Study Planner Section -->
+        <section id="planner" class="section">
+            <h2>AI Study Planner</h2>
+            <div class="planner-generator">
+                <div class="input-group">
+                    <label for="exam-date">Exam/Deadline Date:</label>
+                    <input type="date" id="exam-date">
+                </div>
+                <div class="input-group">
+                    <label for="subjects">Subjects to Study (comma-separated):</label>
+                    <input type="text" id="subjects" placeholder="e.g., Math, Physics, Chemistry">
+                </div>
+                <div class="input-group">
+                    <label for="study-hours">Daily Study Hours Available:</label>
+                    <input type="number" id="study-hours" value="3" min="1" max="12">
+                </div>
+                <button id="generate-plan" class="btn btn-primary">Generate Study Plan</button>
+            </div>
+
+            <div id="study-plan-result" class="result-box hidden">
+                <h3>Your Personalized Study Plan</h3>
+                <div id="plan-content"></div>
+            </div>
+        </section>
+
+        <!-- Vocabulary Builder Section -->
+        <section id="vocabulary" class="section">
+            <h2>Vocabulary Builder</h2>
+            <div class="vocabulary-generator">
+                <div class="input-group">
+                    <label for="vocab-text">Paste Text to Extract Vocabulary:</label>
+                    <textarea id="vocab-text" rows="8" placeholder="Paste your study material here..."></textarea>
+                </div>
+                <div class="input-group">
+                    <label for="difficulty-level">Difficulty Level:</label>
+                    <select id="difficulty-level">
+                        <option value="all">All Words</option>
+                        <option value="intermediate">Intermediate</option>
+                        <option value="advanced">Advanced Only</option>
+                    </select>
+                </div>
+                <button id="extract-vocab" class="btn btn-primary">Extract Vocabulary</button>
+            </div>
+
+            <div id="vocab-result" class="result-box hidden">
+                <h3>Key Vocabulary Terms</h3>
+                <div id="vocab-list"></div>
+            </div>
+        </section>
+
+        <!-- Progress Section -->
+        <section id="progress" class="section">
+            <h2>Your Learning Progress</h2>
+            <div class="progress-dashboard">
+                <div class="stat-card">
+                    <h3>Quizzes Completed</h3>
+                    <div class="stat-value" id="quizzes-completed">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Average Score</h3>
+                    <div class="stat-value" id="avg-score">0%</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Topics Studied</h3>
+                    <div class="stat-value" id="topics-studied">0</div>
+                </div>
+                <div class="stat-card">
+                    <h3>Study Time</h3>
+                    <div class="stat-value" id="study-time">0h</div>
+                </div>
+            </div>
+            <div class="recent-activity">
+                <h3>Recent Activity</h3>
+                <div id="activity-list"></div>
+            </div>
+        </section>
+    </main>
+
+    <div id="loading" class="loading hidden">
+        <div class="spinner"></div>
+        <p>Processing...</p>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
