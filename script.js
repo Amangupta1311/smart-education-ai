@@ -1,3 +1,6 @@
+// Configuration for production
+const API_BASE_URL = 'https://smart-education-ai.onrender.com';
+
 // Navigation
 const navLinks = document.querySelectorAll('.nav-link');
 const sections = document.querySelectorAll('.section');
@@ -19,7 +22,6 @@ navLinks.forEach(link => {
 const themeToggle = document.getElementById('theme-toggle');
 const html = document.documentElement;
 
-// Load saved theme
 const savedTheme = localStorage.getItem('theme') || 'light';
 html.setAttribute('data-theme', savedTheme);
 themeToggle.textContent = savedTheme === 'dark' ? '☀️' : '🌙';
@@ -42,7 +44,6 @@ let userProgress = {
     studyTime: 0
 };
 
-// Load progress from localStorage
 function loadProgress() {
     const saved = localStorage.getItem('smartEducationProgress');
     if (saved) {
@@ -107,7 +108,7 @@ generateQuizBtn.addEventListener('click', async () => {
     showLoading(true);
     
     try {
-        const response = await fetch('http://localhost:5001/generate-quiz', {
+        const response = await fetch(`${API_BASE_URL}/generate-quiz`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ topic, difficulty, num_questions: numQuestions })
@@ -124,7 +125,7 @@ generateQuizBtn.addEventListener('click', async () => {
         addActivity(`Generated quiz on ${topic} (${difficulty})`);
     } catch (error) {
         console.error('Error:', error);
-        alert('Error generating quiz. Make sure the Python server is running.');
+        alert('Error generating quiz. Please try again.');
     } finally {
         showLoading(false);
     }
@@ -165,7 +166,7 @@ submitQuizBtn.addEventListener('click', () => {
     
     userProgress.quizzesCompleted++;
     userProgress.totalScore += percentage;
-    userProgress.studyTime += 10; // Add 10 minutes per quiz
+    userProgress.studyTime += 10;
     saveProgress();
     updateProgressDisplay();
     
@@ -173,7 +174,7 @@ submitQuizBtn.addEventListener('click', () => {
     
     quizResults.innerHTML = `
         <h3>Quiz Results</h3>
-        <p style="font-size: 1.5rem; color: #667eea; font-weight: bold;">
+        <p style="font-size: 1.5rem; font-weight: bold; margin: 1rem 0;">
             Score: ${score}/${currentQuiz.length} (${percentage}%)
         </p>
         <div style="margin-top: 1rem;">
@@ -181,11 +182,11 @@ submitQuizBtn.addEventListener('click', () => {
                 const userAnswer = answers[index];
                 const isCorrect = userAnswer === q.correct_answer;
                 return `
-                    <div style="padding: 1rem; margin-bottom: 1rem; background: ${isCorrect ? '#e6ffed' : '#ffe6e6'}; border-radius: 5px;">
+                    <div style="padding: 1rem; margin-bottom: 1rem; background: var(--bg-secondary); border-radius: 6px; border-left: 3px solid ${isCorrect ? '#22c55e' : '#ef4444'};">
                         <strong>Q${index + 1}:</strong> ${q.question}<br>
                         <strong>Your answer:</strong> ${userAnswer >= 0 ? q.options[userAnswer] : 'Not answered'}<br>
                         <strong>Correct answer:</strong> ${q.options[q.correct_answer]}<br>
-                        ${!isCorrect ? `<strong>Explanation:</strong> ${q.explanation}` : ''}
+                        ${!isCorrect ? `<strong>Explanation:</strong> ${q.explanation}` : '✓ Correct!'}
                     </div>
                 `;
             }).join('')}
@@ -212,7 +213,7 @@ summarizeBtn.addEventListener('click', async () => {
     showLoading(true);
     
     try {
-        const response = await fetch('http://localhost:5001/summarize', {
+        const response = await fetch(`${API_BASE_URL}/summarize`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text })
@@ -223,26 +224,17 @@ summarizeBtn.addEventListener('click', async () => {
         summaryContent.innerHTML = `<p>${data.summary}</p>`;
         summaryResult.classList.remove('hidden');
         
-        userProgress.studyTime += 5; // Add 5 minutes for summarizing
+        userProgress.studyTime += 5;
         addActivity('Summarized study material');
         saveProgress();
         updateProgressDisplay();
     } catch (error) {
         console.error('Error:', error);
-        alert('Error generating summary. Make sure the Python server is running.');
+        alert('Error generating summary. Please try again.');
     } finally {
         showLoading(false);
     }
 });
-
-// Loading indicator
-function showLoading(show) {
-    document.getElementById('loading').classList.toggle('hidden', !show);
-}
-
-// Initialize
-loadProgress();
-updateProgressDisplay();
 
 // Flashcard Generator
 const generateFlashcardsBtn = document.getElementById('generate-flashcards');
@@ -267,7 +259,7 @@ generateFlashcardsBtn.addEventListener('click', async () => {
     showLoading(true);
 
     try {
-        const response = await fetch('http://localhost:5001/generate-flashcards', {
+        const response = await fetch(`${API_BASE_URL}/generate-flashcards`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ topic, content, num_cards: numCards })
@@ -283,7 +275,7 @@ generateFlashcardsBtn.addEventListener('click', async () => {
         addActivity(`Generated ${numCards} flashcards on ${topic}`);
     } catch (error) {
         console.error('Error:', error);
-        alert('Error generating flashcards. Make sure the server is running.');
+        alert('Error generating flashcards. Please try again.');
     } finally {
         showLoading(false);
     }
@@ -297,7 +289,6 @@ function displayFlashcard() {
     document.getElementById('flashcard-answer').textContent = card.answer;
     document.getElementById('card-counter').textContent = `${currentCardIndex + 1} / ${flashcards.length}`;
     
-    // Reset to front
     document.querySelector('.flashcard-front').classList.remove('hidden');
     document.querySelector('.flashcard-back').classList.add('hidden');
 }
@@ -336,7 +327,6 @@ async function sendMessage() {
     
     if (!question) return;
 
-    // Display user message
     const userMsg = document.createElement('div');
     userMsg.className = 'chat-message user-message';
     userMsg.innerHTML = `<strong>You:</strong> ${question}`;
@@ -348,7 +338,7 @@ async function sendMessage() {
     showLoading(true);
 
     try {
-        const response = await fetch('http://localhost:5001/tutor-chat', {
+        const response = await fetch(`${API_BASE_URL}/tutor-chat`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ question })
@@ -356,7 +346,6 @@ async function sendMessage() {
 
         const data = await response.json();
 
-        // Display bot response
         const botMsg = document.createElement('div');
         botMsg.className = 'chat-message bot-message';
         botMsg.innerHTML = `<strong>AI Tutor:</strong> ${data.answer}`;
@@ -367,7 +356,7 @@ async function sendMessage() {
         addActivity('Asked AI Tutor a question');
     } catch (error) {
         console.error('Error:', error);
-        alert('Error contacting AI Tutor. Make sure the server is running.');
+        alert('Error contacting AI Tutor. Please try again.');
     } finally {
         showLoading(false);
     }
@@ -391,7 +380,7 @@ generatePlanBtn.addEventListener('click', async () => {
     showLoading(true);
 
     try {
-        const response = await fetch('http://localhost:5001/generate-study-plan', {
+        const response = await fetch(`${API_BASE_URL}/generate-study-plan`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ exam_date: examDate, subjects, daily_hours: studyHours })
@@ -411,7 +400,7 @@ generatePlanBtn.addEventListener('click', async () => {
         addActivity('Generated study plan');
     } catch (error) {
         console.error('Error:', error);
-        alert('Error generating study plan. Make sure the server is running.');
+        alert('Error generating study plan. Please try again.');
     } finally {
         showLoading(false);
     }
@@ -434,7 +423,7 @@ extractVocabBtn.addEventListener('click', async () => {
     showLoading(true);
 
     try {
-        const response = await fetch('http://localhost:5001/extract-vocabulary', {
+        const response = await fetch(`${API_BASE_URL}/extract-vocabulary`, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body: JSON.stringify({ text, difficulty })
@@ -454,8 +443,17 @@ extractVocabBtn.addEventListener('click', async () => {
         addActivity('Extracted vocabulary from text');
     } catch (error) {
         console.error('Error:', error);
-        alert('Error extracting vocabulary. Make sure the server is running.');
+        alert('Error extracting vocabulary. Please try again.');
     } finally {
         showLoading(false);
     }
 });
+
+// Loading indicator
+function showLoading(show) {
+    document.getElementById('loading').classList.toggle('hidden', !show);
+}
+
+// Initialize
+loadProgress();
+updateProgressDisplay();
